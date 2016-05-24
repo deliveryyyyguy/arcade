@@ -1,0 +1,144 @@
+YungTut.Game = function(game) {
+    
+    this.sprite;
+    this.bullets;
+    
+    this.fireRate;
+    this.nextFire;
+    
+
+};
+
+
+
+for(var i=0; i< 20; i++) 
+        {
+            var b = this.bullets.createMultiple(50, 'bullet');
+            b.name = 'bullet' + i;
+            b.exists = false;
+            b.visible = false;
+            b.checkWorldBounds = true;
+            b.events.onOutOfBounds.add(this.resetBullet, this);
+        }
+        
+        
+        
+
+YungTut.Game.prototype = {
+
+    create: function() {
+        
+        this.physics.startSystem(Phaser.Physics.ARCADE);
+        
+        this.physics.enable(sprite, Phaser.Physics.ARCADE);
+
+        this.buildWorld();
+    },
+    
+    buildWorld: function(){
+        
+        this.add.image(0, 0, 'sky');
+        this.add.image(0, 800, 'ground');
+        this.buildSprite();
+        this.buildBullets();
+        
+    },
+    
+    buildSprite: function() {
+        
+        //not sure if this. is at second line to anchor
+        this.sprite = this.add.sprite(400, 300, 'arrow');
+        this.sprite.anchor.set(0.5);
+    
+    
+    },
+    
+    buildBullets: function() {
+        
+        this.bullets = this.add.group();
+        this.bullets.enableBody = true;
+        this.sprite.body.allowRotation = false;
+        
+        
+    },
+    
+    fireBurst: function(pointer) {
+        if (this.time.now > this.nextFire && this.bullets.countDead() > 0)
+    {
+        this.nextFire = this.time.now + this.fireRate;
+
+        var bullet = this.bullets.getFirstDead();
+
+        this.bullet.reset(sprite.x - 8, sprite.y - 8);
+
+        this.physics.arcade.moveToPointer(bullet, 300);
+    }
+    },
+    
+    render: function() {
+        this.debug.text('Active Bullets: ' + bullets.countLiving() + ' / ' + bullets.total, 32, 32);
+    this.debug.spriteInfo(sprite, 32, 450);
+    },
+    
+    if (this.time.now > this.nextFire && bullets.countDead() > 0)
+    {
+        this.nextFire = this.time.now + this.fireRate;
+
+        var bullet = this.bullets.getFirstDead();
+
+        this.bullet.reset(sprite.x - 8, sprite.y - 8);
+
+        this.physics.arcade.moveToPointer(bullet, 300);
+    }
+        
+       
+    
+    
+    update: function() {
+        
+        this.sprite.rotation = this.physics.arcade.angleToPointer(sprite);
+
+    if (this.input.activePointer.isDown)
+    {
+        fire();
+        }
+    }
+    
+    
+    //SMOKE
+    
+    buildSmoke: function() {
+        this.smokeunitgroup = this.add.group();
+        for(var i=0; i<this.totalSmokeunits; i++) {
+            var r = this.smokeunit.create(this.rnd.integerInRange(0, this.world.width), this.rnd.realInRange(-1500, 0), 'Smoke', 'Smoke0000');
+            var scale = this.rnd.realInRange(0.3, 1.0);
+            r.scale.x = scale;
+            r.scale.y = scale;
+            this.physics.enable(r, Phaser.Physics.ARCADE);
+            r.enableBody = true;
+            r.body.velocity.y = this.rnd.integerInRange(200, 400);
+            r.animations.add('Fall');
+            r.animations.play('Fall', 24, true);
+            r.checkWorldBounds = true;
+            r.events.onOutOfBounds.add(this.resetSmoke, this);
+        }
+    },
+    
+    resetSmoke: function(r) {
+        if(r.y > this.world.height) {
+            this.respawnRock(r);   
+        }
+    },
+    
+    respawnSmoke: function(r) {
+        if(this.gameover == false){
+            r.reset(this.rnd.integerInRange(0, this.world.width), this.rnd.realInRange(-1500, 0));
+            r.body.velocity.y = this.rnd.integerInRange(200, 400);
+        }
+    },
+    
+    
+    
+    
+    
+};
